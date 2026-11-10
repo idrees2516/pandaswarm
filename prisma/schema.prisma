@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── PandaSwarm: the agentic coding-agent orchestration platform ────────────
+
+model Session {
+  id        String       @id
+  title     String
+  mode      String       @default("task") // task | chat
+  status    String       @default("queued") // queued | planning | running | completed | failed | cancelled
+  summary   String       @default("")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  messages  Message[]
+  agents    Agent[]
+  events    SwarmEvent[]
+  artifacts Artifact[]
+  runs      SandboxRun[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+  role      String // user | assistant | system
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([sessionId, createdAt])
+}
+
+model Agent {
+  id         String     @id
+  session    Session    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId  String
+  name       String
+  role       String // master | coordinator | planner | coder | reviewer | tester | researcher | integrator | computer_user
+  goal       String
+  status     String     @default("pending") // pending | running | waiting_tool | waiting_sandbox | done | failed | cancelled
+  model      String     @default("")
+  turns      Int        @default(0)
+  maxTurns   Int        @default(6)
+  workspace  String     @default("")
+  dependsOn  String     @default("[]") // JSON array of agent ids
+  error      String?
+  startedAt  DateTime?
+  finishedAt DateTime?
+  createdAt  DateTime   @default(now())
+  artifacts  Artifact[]
+
+  @@index([sessionId])
+}
+
+model SwarmEvent {
+  id        Int      @id @default(autoincrement())
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+  seq       Int
+  kind      String // task.created | plan.generated | agent.spawned | agent.status | tool.call | sandbox.run | sandbox.test_report | artifact.written | milestone.completed | harness.suggestion | task.completed | log
+  payload   String   @default("{}") // JSON
+  createdAt DateTime @default(now())
+
+  @@index([sessionId, seq])
+}
+
+model Artifact {
+  id        String   @id @default(cuid())
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+  agent     Agent?   @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  agentId   String?
+  path      String
+  language  String   @default("text")
+  content   String   @default("")
+  bytes     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+model SandboxRun {
+  id         String   @id @default(cuid())
+  session    Session? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId  String?
+  agentId    String?
+  backend    String // local:plain | local:unshare | local:bwrap | instabox
+  cmd        String
+  exitCode   Int      @default(0)
+  stdout     String   @default("")
+  stderr     String   @default("")
+  durationMs Int      @default(0)
+  timedOut   Boolean  @default(false)
+  reportJson String   @default("{}") // TestReport
+  createdAt  DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+model Fact {
+  id        String   @id @default(cuid())
+  sessionId String?
+  kind      String   @default("note")
+  content   String
+  salience  Float    @default(1)
+  hits      Int      @default(0)
+  embedding Bytes
+  createdAt DateTime @default(now())
+  lastHitAt DateTime @default(now())
+}
+
+model RagDoc {
+  id        String   @id @default(cuid())
+  path      String   @unique
+  mtime     Float
+  bytes     Int
+  chunkCount Int     @default(0)
+  indexedAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}

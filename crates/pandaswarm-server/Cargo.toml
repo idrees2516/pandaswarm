@@ -1,0 +1,31 @@
+[package]
+name = "pandaswarm-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "axum REST + WebSocket server exposing the PandaSwarm engine"
+
+[[bin]]
+name = "pandaswarm-server"
+path = "src/main.rs"
+
+[dependencies]
+pandaswarm-core.workspace = true
+pandaswarm-durable.workspace = true
+pandaswarm-llm.workspace = true
+pandaswarm-memory.workspace = true
+pandaswarm-rag.workspace = true
+pandaswarm-search.workspace = true
+pandaswarm-sandbox.workspace = true
+pandaswarm-orchestrator.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+axum.workspace = true
+reqwest.workspace = true
+tower-http.workspace = true
+futures.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

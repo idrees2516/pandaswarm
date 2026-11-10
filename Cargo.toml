@@ -1,0 +1,58 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/pandaswarm-core",
+    "crates/pandaswarm-durable",
+    "crates/pandaswarm-llm",
+    "crates/pandaswarm-memory",
+    "crates/pandaswarm-rag",
+    "crates/pandaswarm-search",
+    "crates/pandaswarm-sandbox",
+    "crates/pandaswarm-orchestrator",
+    "crates/pandaswarm-server",
+    "crates/pandaswarm-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/idrees2516/pandaswarm"
+rust-version = "1.75"
+
+[workspace.dependencies]
+pandaswarm-core = { path = "crates/pandaswarm-core" }
+pandaswarm-durable = { path = "crates/pandaswarm-durable" }
+pandaswarm-llm = { path = "crates/pandaswarm-llm" }
+pandaswarm-memory = { path = "crates/pandaswarm-memory" }
+pandaswarm-rag = { path = "crates/pandaswarm-rag" }
+pandaswarm-search = { path = "crates/pandaswarm-search" }
+pandaswarm-sandbox = { path = "crates/pandaswarm-sandbox" }
+pandaswarm-orchestrator = { path = "crates/pandaswarm-orchestrator" }
+
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+thiserror = "1"
+async-trait = "0.1"
+futures = "0.3"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+axum = { version = "0.7", features = ["ws"] }
+tower-http = { version = "0.5", features = ["cors", "fs"] }
+tokio-tungstenite = "0.23"
+clap = { version = "4", features = ["derive"] }
+walkdir = "2"
+flate2 = "1"
+sha2 = "0.10"
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+base64 = "0.22"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

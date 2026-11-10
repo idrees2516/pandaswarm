@@ -1,0 +1,40 @@
+# PandaSwarm configuration — copy to pandaswarm.toml and edit.
+# Every value can also come from env vars (PANDASWARM_*, INSTABOX_API_KEY, ...).
+
+[llm]
+provider = "mock"            # mock | openai | anthropic | openrouter | deepseek | glm | ollama
+model = "gpt-4o-mini"
+api_key = ""
+base_url = ""                # e.g. https://api.deepseek.com/v1
+temperature = 0.2
+max_tokens = 4096
+
+[sandbox]
+backend = "auto"             # auto | bwrap | unshare | plain | instabox | e2b_compat
+default_timeout_secs = 120
+
+[sandbox.instabox]
+api_key = ""                 # or INSTABOX_API_KEY (ibk_...)
+template = "ci"              # agent-browser | android | omarchy | ci (free plan)
+mode = "one_shot"            # one_shot | persistent
+
+[sandbox.e2b]
+api_key = ""
+base_url = ""
+
+[rag]
+chunk_lines = 40
+chunk_overlap = 8
+vector_dim = 256
+rrf_k = 60
+
+[search]
+web_provider = "none"        # tavily | brave | searxng | ddg | none
+tavily_key = ""
+brave_key = ""
+searxng_url = ""
+cdp_endpoint = ""            # computer-use agent, e.g. http://127.0.0.1:9222
+
+[server]
+bind = "127.0.0.1:8081"
+static_dir = "frontend/out"

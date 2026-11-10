@@ -1,0 +1,22 @@
+[package]
+name = "pandaswarm-orchestrator"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Three-tier cowork orchestration: master plans, coordinator schedules, sub-agents execute — as Durable Objects, with git worktrees, jobs and the harness tuner"
+
+[dependencies]
+pandaswarm-core.workspace = true
+pandaswarm-durable.workspace = true
+pandaswarm-llm.workspace = true
+pandaswarm-memory.workspace = true
+pandaswarm-rag.workspace = true
+pandaswarm-search.workspace = true
+pandaswarm-sandbox.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+async-trait.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
